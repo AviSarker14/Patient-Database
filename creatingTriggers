@@ -1,0 +1,13 @@
+create or replace trigger vitD 
+BEFORE update
+on vitamind_primary -- Prostate = 3, 
+for each row
+when (old.vitd_study_group = 3 and old.vitd_draw_seasonal_year = 2003 and old.vitd_is_case = 0)
+begin
+        dbms_output.put_line('ATTENTION ATTENTION!!!');
+end;
+/
+update vitamind_primary
+set vitd_is_case = 1
+where plco_id = 'R-137042-8';
+/
