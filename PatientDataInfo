@@ -1,0 +1,34 @@
+declare
+    rangeofincome varchar(70);
+begin
+    for x in( select p.onepatient.extract('//plco_id/text()').getstringval() as PLCO_ID,
+                        p.onepatient.extract('//sqx_age/text()').getstringval() as Age,
+                        p.onepatient.extract('//sqx_days/text()').getstringval() as Days,
+                        p.onepatient.extract('//sqx_income/text()').getstringval() as income,
+                        p.onepatient.extract('//sqx_bmi_curc/text()').getstringval() as bmi,
+                        p.onepatient.extract('//sqx_height/text()').getstringval() as height
+    from patient_xml p)
+    loop
+    if x.income = 1 then
+        rangeofincome:= ' <$20,000';
+    elsif x.income = 2 then
+        rangeofincome:=' $20,000-$49,000';
+    elsif x.income = 3 then
+        rangeofincome:=' $50,000-$99,000';
+    elsif x.income = 4 then
+        rangeofincome:=' $100,000-$200,000';
+    elsif x.income = 5 then
+        rangeofincome:=' >$200,000 ';
+    else
+        rangeofincome:=' Unknown';
+    end if;
+    DBMS_OUTPUT.ENABLE(1000000);
+    dbms_output.put_line('PLCO_ID               is:'|| x.PLCO_ID || chr(10) || 
+                         'Age                   is:'|| x.Age || chr(10) ||
+                         'Days of Completion    is:'|| x.Days || chr(10) ||
+                         'Income                is:'||   rangeofincome || chr(10) ||
+                         'Curr                  is:'|| x.bmi || chr(10) ||
+                         'Height                is:'|| x.height || chr(10));
+    end loop;
+end;
+
