@@ -1,0 +1,21 @@
+declare
+    eligibility varchar(56);
+begin
+    for i in (select sqx_status, sqx_days, patients.plco_id, sqx_age, vitd_oh25d_ng_ml, vitd_study_group
+    from patients, vitamind_primary
+    where vitd_study_group = 3 and vitd_oh25d_ng_ml > 20 and vitd_draw_seasonal_year = 2000 and patients.plco_id = vitamind_primary.plco_id)
+    loop
+    if i.sqx_status = 1 then
+        eligibility:= 'Compliant, Valid';
+    elsif i.sqx_status = 3 then
+        eligibility:= 'Non-eligible';
+    elsif i.sqx_status = 4 then
+        eligibility:= 'Non-compliant';
+    elsif i.sqx_status = 5 then
+        eligibility:= 'Compliant, Invalid';
+    else
+        eligibility:= 'Unknown';
+    end if;
+    dbms_output.put_line('PLCO_ID = ' || i.plco_id || rpad(' ',5) || 'Age = ' || i.sqx_age || rpad(' ', 5) || '#_of_days = ' || i.sqx_days || rpad(' ',5) || 'Eligibility of the form  = ' || eligibility);
+    end loop;
+end;
