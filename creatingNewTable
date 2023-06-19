@@ -1,0 +1,38 @@
+create or replace type treatment as object (
+    trt_numc            number(38,0),
+    trt_familyc         number(38,0),
+    neoadjuvant         number(38,0),
+    trt_days            number(38,0)
+)
+/
+create table lung_vitd_patient (
+    oneobj treatment,
+    PLCO_ID varchar2(26),
+    primary key (PLCO_ID)
+);
+/
+BEGIN
+for i in (select distinct lung_treatment.plco_id
+    from lung_treatment inner join vitamind on vitamind.plco_id = lung_treatment.plco_id)
+    loop
+        insert into lung_vitd_patient (lung_vitd_patient.plco_id) values(i.plco_id);
+    end loop;
+END;
+/
+BEGIN
+    for i in (select plco_id, sqx_age, sqx_days, sqx_income, sqx_bmi_curc, sqx_height from patients where sqx_valid =1)
+    LOOP
+    insert into patient_xml values(
+        'onePatient',
+        sys.XMLType.createXML(
+        '<onePatient createdby = "Avi">
+            <plco_id> ' || i.plco_id || ' </plco_id>
+            <sqx_age> ' || i.sqx_age || ' </sqx_age>
+            <sqx_days> ' || i.sqx_days || ' </sqx_days>
+            <sqx_income> ' || i.sqx_income || ' </sqx_income>
+            <sqx_bmi_curc> ' || i.sqx_bmi_curc || ' </sqx_bmi_curc>
+            <sqx_height> ' || i.sqx_height || ' </sqx_height>
+        </onePatient> ' ),
+        sysdate);
+    END LOOP;
+END;
