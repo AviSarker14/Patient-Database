@@ -1,0 +1,15 @@
+set serveroutput on;
+declare
+    v_name varchar(50);
+    cursor summer is
+    select PLCO_ID from vitamind_primary
+    where (vitd_study=13 and vitd_draw_season = 3) and (VITD_OH25D_NG_ML>'30' and VITD_DRAW_TIME<=10);
+begin
+ open summer;
+ loop
+    fetch summer into v_name;
+    dbms_output.PUT_LINE(v_name);
+    exit when summer%NOTFOUND;
+ end loop;
+ close summer;
+end;
