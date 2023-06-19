@@ -1,0 +1,8 @@
+declare
+begin
+    for counter in
+	(select * from patients)
+    loop
+        dbms_output.put_line( 'PLCO_ID: ' || counter.PLCO_ID || ' Age: ' || counter.SQX_AGE || ' #_of_Days: ' || counter.sqx_days || ' Income Level: ' || counter.sqx_income);
+    end loop;
+end;
