@@ -1,0 +1,21 @@
+create or replace trigger vitdpatient
+before update OF vitd_is_case on vitamind_primary
+for EACH ROW
+when ( old.VITD_STUDY_GROUP =8 and old.VITD_DRAW_SEASONAL_YEAR =2000 )
+Declare
+p_id varchar(30);
+age int;
+numdays varchar2(30);
+ELIGIBLE varchar2(30);
+VALID varchar2(30);
+begin
+    Select patient.plco_id, patient.sqx_age, patient.sqx_days, patient.sqx_valid, patient.sqx_status 
+    into p_id, age, N_DAYS, valid, eligible
+    FROM patients
+    WHERE plco_id = :new.Plco_id;
+
+dbms_output.put_line('PLCO_: ' || p_id);
+dbms_output.put_line('Age: ' || age);
+dbms_output.put_line('#_of_days = ' || numdays);
+dbms_output.put_line('Eligibility of the form: ' || 'Invalid');
+end;
