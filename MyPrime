@@ -1,0 +1,29 @@
+create function MYPRIME(
+n integer
+)
+RETURNS varchar(10)
+begin
+    declare anumber integer
+    declare retval varchar(10)
+    declare counter integer
+    set retval = 'true'
+    set counter = 2
+    set anumber = 1
+    
+    while (counter <= anumber/2)
+    begin
+        if((anumber % counter) =0)
+        begin
+            set anumber =0
+            break
+        end
+        
+        if((anumber=1)
+        begin
+            set retval ='TRUE'
+        end
+        
+        set counter =counter+1
+    end
+    return retval
+end
