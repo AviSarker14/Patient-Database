@@ -1,0 +1,12 @@
+declare 
+    cursor add is 
+    select * from vitamin_ml for update;
+
+begin
+    for counter in add
+    loop
+        update vitamin_ml
+        set sum = counter.vitd_oh125d_pg_ml + counter.vitd_oh25d_ng_ml
+        where current of add;
+    end loop;
+end;
